@@ -91,6 +91,9 @@ public class CrptApi {
             String tnvedCode;
             String uitCode;
             String uituCode;
+        public String toJson() throws JsonProcessingException {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
         }
 
     }
