@@ -1,7 +1,6 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,39 +57,54 @@ public class CrptApi {
     }
 
     @Data
-    class Document {
-        String docId;
-        String docStatus;
-        String docType = "LP_INTRODUCE_GOODS";
-        boolean importRequest = true;
-        Description description;
+    @Builder
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    static class Document implements Serializable {
+        final String docId;
+        final String docStatus;
+        @Builder.Default
+        final String docType = "LP_INTRODUCE_GOODS";
+        @Builder.Default
+        final boolean importRequest = true;
+        final Description description;
 
-        String ownerInn;
-        String participantInn;
-        String producerInn;
+        final String ownerInn;
+        final String participantInn;
+        final String producerInn;
 
-        Date productionDate = Date.valueOf("2020-01-23");
-        String productionType;
+        @Builder.Default
+        final Date productionDate = Date.valueOf("2020-01-23");
+        final String productionType;
 
-        Date regDate = Date.valueOf("2020-01-23");
-        String regNumber;
+        final List<Product> products;
+
+        @Builder.Default
+        final Date regDate = Date.valueOf("2020-01-23");
+        final String regNumber;
 
         @Data
-        class Description {
+        @AllArgsConstructor
+        static class Description implements Serializable {
             String participantInn;
         }
 
         @Data
-        class Product {
-            String certificateDocument;
-            Date certificateDocumentDate = Date.valueOf("2020-01-23");
-            String certificateDocumentNumber;
-            String ownerInn;
-            String producerInn;
-            Date productionDate = Date.valueOf("2020-01-23");
-            String tnvedCode;
-            String uitCode;
-            String uituCode;
+        @Builder
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        static class Product implements Serializable {
+            final String certificateDocument;
+            @Builder.Default
+            final Date certificateDocumentDate = Date.valueOf("2020-01-23");
+            final String certificateDocumentNumber;
+            final String ownerInn;
+            final String producerInn;
+            @Builder.Default
+            final Date productionDate = Date.valueOf("2020-01-23");
+            final String tnvedCode;
+            final String uitCode;
+            final String uituCode;
+        }
+
         public String toJson() throws JsonProcessingException {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
